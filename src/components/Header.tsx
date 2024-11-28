@@ -6,6 +6,7 @@ export const Header = () => {
 	const { pathname } = useLocation();
 	const hasHome = useMemo(() => pathname == '/', [pathname]);
 
+	const categories = useAppStore(state => state.categories);
 	const fetchCategories = useAppStore(state => state.fetchCategories);
 
 	useEffect(() => {
@@ -66,6 +67,13 @@ export const Header = () => {
 								name='category'
 								className='p-3 w-full rounded-md outline-none'>
 								<option value=''>-- Seleccione --</option>
+								{categories.map((category, index) => (
+									<option
+										key={index}
+										value={category.strCategory}>
+										{category.strCategory}
+									</option>
+								))}
 							</select>
 						</div>
 						<input
