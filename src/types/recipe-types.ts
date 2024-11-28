@@ -4,6 +4,8 @@ import {
 	CategorySchema,
 	DrinkSchema,
 	DrinksSchema,
+	FullDrinkResponseSchema,
+	FullDrinkSchema,
 	SearchFilterSchema,
 } from '../schemas/recipe-schema';
 
@@ -14,3 +16,6 @@ export type SearchFilter = z.infer<typeof SearchFilterSchema>;
 
 export type Drink = z.infer<typeof DrinkSchema>;
 export type Drinks = z.infer<typeof DrinksSchema>;
+
+export type FullDrink = z.infer<typeof FullDrinkSchema>;
+export type FullDrinkResponse = z.infer<typeof FullDrinkResponseSchema>;
