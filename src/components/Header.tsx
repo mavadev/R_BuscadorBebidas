@@ -20,7 +20,7 @@ export const Header = () => {
 		ingredient: '',
 		category: '',
 	});
-	const searchRecipes = useAppStore(state => state.searchRecipes);
+	const searchDrinks = useAppStore(state => state.searchDrinks);
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
 		setSearchFilter({
@@ -38,8 +38,8 @@ export const Header = () => {
 			return;
 		}
 
-		// Consultar las recetas
-		searchRecipes(searchFilter);
+		// Consultar las bebidas
+		searchDrinks(searchFilter);
 	};
 
 	return (

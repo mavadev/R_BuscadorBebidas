@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { CategoriesSchema, RecipesSchema } from '../schemas/recipe-schema';
-import { Category, SearchFilter, Recipe } from '../types/recipe-types';
+import { CategoriesSchema, DrinksSchema } from '../schemas/recipe-schema';
+import { Category, SearchFilter, Drink } from '../types/recipe-types';
 
 export async function getCategories(): Promise<Category[]> {
 	const url = 'https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list';
@@ -15,17 +15,17 @@ export async function getCategories(): Promise<Category[]> {
 	}
 }
 
-export async function getRecipes(filters: SearchFilter): Promise<Recipe[]> {
+export async function getDrinks(filters: SearchFilter): Promise<Drink[]> {
 	const { ingredient, category } = filters;
 	const url = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${ingredient}&c=${category}`;
 
 	try {
 		const { data } = await axios.get(url);
-		const result = RecipesSchema.safeParse(data);
+		const result = DrinksSchema.safeParse(data);
 		if (result.success) return result.data.drinks;
 		return [];
 	} catch (error) {
-		console.error('Error fetching recipes:', error);
-		throw new Error('Failed to fetch recipes. Please try again later.');
+		console.error('Error fetching drinks:', error);
+		throw new Error('Failed to fetch drinks. Please try again later.');
 	}
 }
