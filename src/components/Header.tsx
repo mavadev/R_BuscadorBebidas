@@ -1,17 +1,46 @@
-import { useEffect, useMemo } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useAppStore } from '../stores/useAppStore';
+import { SearchFilter } from '../types/recipe-types';
 
 export const Header = () => {
+	// Location
 	const { pathname } = useLocation();
 	const hasHome = useMemo(() => pathname == '/', [pathname]);
 
+	// Store
 	const categories = useAppStore(state => state.categories);
 	const fetchCategories = useAppStore(state => state.fetchCategories);
-
 	useEffect(() => {
 		fetchCategories();
 	}, []);
+
+	// State
+	const [searchFilter, setSearchFilter] = useState<SearchFilter>({
+		ingredient: '',
+		category: '',
+	});
+	const searchRecipes = useAppStore(state => state.searchRecipes);
+
+	const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+		setSearchFilter({
+			...searchFilter,
+			[e.target.name]: e.target.value,
+		});
+	};
+
+	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		// Validar valores
+		if (Object.values(searchFilter).includes('')) {
+			console.log('Todos los campos son obligatorios');
+			return;
+		}
+
+		// Consultar las recetas
+		searchRecipes(searchFilter);
+	};
 
 	return (
 		<header className={`bg-black ${hasHome ? 'bg-header bg-cover bg-center bg-blend-color-dodge h-2/3' : 'h-auto'}`}>
@@ -38,10 +67,12 @@ export const Header = () => {
 							Favoritos
 						</NavLink>
 					</nav>
-					{/* Formulario */}
 				</div>
+				{/* Formulario */}
 				{hasHome && (
-					<form className='space-y-5 w-full md:w-1/3 pb-5'>
+					<form
+						className='space-y-5 w-full md:w-1/2 lg:w-1/3 pb-5'
+						onSubmit={handleSubmit}>
 						<div className='flex-[2]'>
 							<label
 								htmlFor='ingredient'
@@ -52,6 +83,7 @@ export const Header = () => {
 								type='text'
 								id='ingredient'
 								name='ingredient'
+								onChange={handleChange}
 								placeholder='Ej. Vodka, Tequila, Café'
 								className='p-3 w-full rounded-md outline-none'
 							/>
@@ -65,6 +97,7 @@ export const Header = () => {
 							<select
 								id='category'
 								name='category'
+								onChange={handleChange}
 								className='p-3 w-full rounded-md outline-none'>
 								<option value=''>-- Seleccione --</option>
 								{categories.map((category, index) => (
