@@ -112,7 +112,7 @@ export const Header = () => {
 						<input
 							type='submit'
 							value='Buscar Recetas'
-							className='cursor-pointer bg-primary hover:bg-primary_hover text-white font-bold w-full p-3 rounded-md uppercase transition-colors'
+							className='bg-primary hover:bg-primary-darken button rounded-md p-3'
 						/>
 					</form>
 				)}

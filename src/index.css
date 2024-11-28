@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.hover-image:hover img {
+	transform: scale(1.1) rotate(5deg);
+}
+
+.button {
+	@apply cursor-pointer text-white font-bold w-full uppercase transition-colors;
+}

@@ -10,8 +10,10 @@ export default {
 			},
 			colors: {
 				black: '#141414',
-				primary: colors.orange[600],
-				primary_hover: colors.orange[800],
+				primary: {
+					DEFAULT: colors.orange[600],
+					darken: colors.orange[800],
+				},
 			},
 		},
 	},
