@@ -2,10 +2,10 @@ import axios from 'axios';
 import {
 	CategoriesSchema,
 	DrinksSchema,
-	FullDrinkSchema,
-	FullDrinkWithIngredientsSchema,
+	FullDrinkWithoutIngredientsSchema,
+	FullDrinkWithoutIngredientsSchema,
 } from '../schemas/recipe-schema';
-import { Category, SearchFilter, Drink, FullDrink, FullDrinkIngredients } from '../types/recipe-types';
+import { Category, SearchFilter, Drink, FullDrink, FullDrink } from '../types/recipe-types';
 
 export async function getCategories(): Promise<Category[]> {
 	const url = 'https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list';
@@ -55,20 +55,20 @@ function getIngredients(recipe: FullDrink): Array<string> {
 	return ingredients;
 }
 
-export async function getRecipeByID(id: Drink['idDrink']): Promise<FullDrinkIngredients | null> {
+export async function getRecipeByID(id: Drink['idDrink']): Promise<FullDrink | null> {
 	const url = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`;
 
 	try {
 		// Obtener bebida con ingredientes dispersos
 		const { data } = await axios.get(url);
-		const drink = FullDrinkSchema.safeParse(data.drinks[0]);
+		const drink = FullDrinkWithoutIngredientsSchema.safeParse(data.drinks[0]);
 		if (!drink.success) return null;
 
 		// Convertir propiedades a propiedad de ingredientes
 		const arrIngredients = getIngredients(drink.data);
 		const drinkWithIngredients = { ...drink.data, arrIngredients };
 
-		const fullDrink = FullDrinkWithIngredientsSchema.safeParse(drinkWithIngredients);
+		const fullDrink = FullDrinkWithoutIngredientsSchema.safeParse(drinkWithIngredients);
 		if (fullDrink.success && fullDrink.data) return fullDrink.data;
 		return null;
 	} catch (error) {

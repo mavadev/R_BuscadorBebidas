@@ -21,7 +21,7 @@ export const DrinksSchema = z.object({
 	drinks: z.array(DrinkSchema),
 });
 
-export const FullDrinkSchema = z.object({
+export const FullDrinkWithoutIngredientsSchema = z.object({
 	idDrink: z.string(),
 	strDrink: z.string(),
 	strDrinkThumb: z.string(),
@@ -52,7 +52,7 @@ export const FullDrinkSchema = z.object({
 	strMeasure10: z.string().nullable(),
 });
 
-export const FullDrinkWithIngredientsSchema = z.object({
+export const FullDrinkSchema = z.object({
 	idDrink: z.string(),
 	strDrink: z.string(),
 	strDrinkThumb: z.string(),
