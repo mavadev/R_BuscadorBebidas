@@ -2,10 +2,10 @@ import axios from 'axios';
 import {
 	CategoriesSchema,
 	DrinksSchema,
-	FullDrinkWithoutIngredientsSchema,
+	FullDrinkSchema,
 	FullDrinkWithoutIngredientsSchema,
 } from '../schemas/recipe-schema';
-import { Category, SearchFilter, Drink, FullDrink, FullDrink } from '../types/recipe-types';
+import { Category, SearchFilter, Drink, FullDrink, FullDrinkIngredients } from '../types/recipe-types';
 
 export async function getCategories(): Promise<Category[]> {
 	const url = 'https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list';
@@ -35,15 +35,15 @@ export async function getDrinks(filters: SearchFilter): Promise<Drink[]> {
 	}
 }
 
-function getIngredients(recipe: FullDrink): Array<string> {
+function getIngredients(recipe: FullDrinkIngredients): Array<string> {
 	const ingredients = [];
 
 	var position = 1;
 	var existNewIngredient = true;
 
 	while (existNewIngredient) {
-		const ingredient = recipe[`strIngredient${position}` as keyof FullDrink];
-		const measure = recipe[`strMeasure${position}` as keyof FullDrink];
+		const ingredient = recipe[`strIngredient${position}` as keyof FullDrinkIngredients];
+		const measure = recipe[`strMeasure${position}` as keyof FullDrinkIngredients];
 
 		if (ingredient && measure) {
 			ingredients.push(`${ingredient} - ${measure}`);
@@ -68,7 +68,7 @@ export async function getRecipeByID(id: Drink['idDrink']): Promise<FullDrink | n
 		const arrIngredients = getIngredients(drink.data);
 		const drinkWithIngredients = { ...drink.data, arrIngredients };
 
-		const fullDrink = FullDrinkWithoutIngredientsSchema.safeParse(drinkWithIngredients);
+		const fullDrink = FullDrinkSchema.safeParse(drinkWithIngredients);
 		if (fullDrink.success && fullDrink.data) return fullDrink.data;
 		return null;
 	} catch (error) {
