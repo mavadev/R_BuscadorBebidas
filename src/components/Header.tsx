@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useAppStore } from '../stores/useAppStore';
 import { SearchFilter } from '../types/recipe-types';
 
@@ -9,6 +9,7 @@ export const Header = () => {
 	const hasHome = useMemo(() => pathname == '/', [pathname]);
 
 	// Store
+	const drinks = useAppStore(state => state.drinks);
 	const categories = useAppStore(state => state.categories);
 	const fetchCategories = useAppStore(state => state.fetchCategories);
 	useEffect(() => {
@@ -42,18 +43,31 @@ export const Header = () => {
 		searchDrinks(searchFilter);
 	};
 
+	const conditionalClass = useMemo(() => {
+		if (hasHome) {
+			var className = 'bg-header bg-cover bg-center bg-blend-color-dodge';
+			if (drinks.length) {
+				className += ' h-2/3';
+			} else {
+				className += ' h-dvh';
+			}
+			return className;
+		}
+		return 'h-auto';
+	}, [hasHome, drinks]);
+
 	return (
-		<header className={`bg-black ${hasHome ? 'bg-header bg-cover bg-center bg-blend-color-dodge h-2/3' : 'h-auto'}`}>
+		<header className={`bg-black ${conditionalClass} transition-all`}>
 			<div className='container mx-auto p-5 h-full flex flex-col justify-between'>
 				<div className='flex justify-between items-center'>
 					{/* Logo */}
-					<div>
+					<Link to='/'>
 						<img
 							alt='Logotipo'
 							src='/logo-white.svg'
 							className='h-10'
 						/>
-					</div>
+					</Link>
 					{/* Navegación */}
 					<nav className='flex gap-2'>
 						<NavLink

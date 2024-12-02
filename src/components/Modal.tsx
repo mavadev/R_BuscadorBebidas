@@ -38,30 +38,30 @@ export const Modal = () => {
 							</ul>
 						</div>
 						{/* Imagen */}
-						<div className='flex-1 bg-red-50'>
+						<div className='flex-1 bg-red-50 w-1/2 md:w-full'>
 							<img
 								src={recipe?.strDrinkThumb}
 								alt={`Drink Thumb ${recipe?.idDrink}`}
 							/>
 						</div>
 					</div>
-					<div className='mb-4'>
+					<div className='my-4'>
 						<DialogTitle className='text-xl font-bold mb-2'>Instrucciones: </DialogTitle>
 						<p>{recipe?.strInstructionsES || recipe?.strInstructions}</p>
 					</div>
 
-					<footer className='mt-5 flex gap-4'>
-						<button
-							type='button'
-							onClick={closeModal}
-							className='button bg-black p-3 rounded hover:bg-black/90'>
-							Cerrar
-						</button>
+					<footer className='mt-5 flex flex-col md:flex-row gap-4'>
 						<button
 							type='button'
 							onClick={() => setFavorite(recipe!)}
 							className='button bg-primary p-3 rounded hover:bg-primary-darken'>
 							{addedToFavorite ? 'Eliminar de' : 'Añadir a'} Favoritos
+						</button>
+						<button
+							type='button'
+							onClick={closeModal}
+							className='button bg-black p-3 rounded hover:bg-black/90'>
+							Cerrar
 						</button>
 					</footer>
 				</DialogPanel>
