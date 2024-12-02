@@ -1,6 +1,11 @@
 import axios from 'axios';
-import { CategoriesSchema, DrinksSchema, FullDrinkResponseSchema } from '../schemas/recipe-schema';
-import { Category, SearchFilter, Drink, FullDrink } from '../types/recipe-types';
+import {
+	CategoriesSchema,
+	DrinksSchema,
+	FullDrinkSchema,
+	FullDrinkWithIngredientsSchema,
+} from '../schemas/recipe-schema';
+import { Category, SearchFilter, Drink, FullDrink, FullDrinkIngredients } from '../types/recipe-types';
 
 export async function getCategories(): Promise<Category[]> {
 	const url = 'https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list';
@@ -30,13 +35,41 @@ export async function getDrinks(filters: SearchFilter): Promise<Drink[]> {
 	}
 }
 
-export async function getRecipeByID(id: Drink['idDrink']): Promise<FullDrink | null> {
+function getIngredients(recipe: FullDrink): Array<string> {
+	const ingredients = [];
+
+	var position = 1;
+	var existNewIngredient = true;
+
+	while (existNewIngredient) {
+		const ingredient = recipe[`strIngredient${position}` as keyof FullDrink];
+		const measure = recipe[`strMeasure${position}` as keyof FullDrink];
+
+		if (ingredient && measure) {
+			ingredients.push(`${ingredient} - ${measure}`);
+			position++;
+		} else {
+			existNewIngredient = false;
+		}
+	}
+	return ingredients;
+}
+
+export async function getRecipeByID(id: Drink['idDrink']): Promise<FullDrinkIngredients | null> {
 	const url = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`;
 
 	try {
+		// Obtener bebida con ingredientes dispersos
 		const { data } = await axios.get(url);
-		const result = FullDrinkResponseSchema.safeParse(data);
-		if (result.success && result.data.drinks[0]) return result.data.drinks[0];
+		const drink = FullDrinkSchema.safeParse(data.drinks[0]);
+		if (!drink.success) return null;
+
+		// Convertir propiedades a propiedad de ingredientes
+		const arrIngredients = getIngredients(drink.data);
+		const drinkWithIngredients = { ...drink.data, arrIngredients };
+
+		const fullDrink = FullDrinkWithIngredientsSchema.safeParse(drinkWithIngredients);
+		if (fullDrink.success && fullDrink.data) return fullDrink.data;
 		return null;
 	} catch (error) {
 		console.error('Error fetching full drink:', error);

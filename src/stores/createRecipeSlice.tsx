@@ -1,6 +1,6 @@
 import { StateCreator } from 'zustand';
 import { getCategories, getDrinks, getRecipeByID } from '../services/RecipeService';
-import { Category, Drink, FullDrink, SearchFilter } from '../types/recipe-types';
+import { Category, Drink, FullDrinkIngredients, SearchFilter } from '../types/recipe-types';
 
 export type RecipeSliceType = {
 	categories: Category[];
@@ -9,8 +9,11 @@ export type RecipeSliceType = {
 	drinks: Drink[];
 	searchDrinks: (filters: SearchFilter) => Promise<void>;
 
-	recipe: FullDrink | null;
+	recipe: FullDrinkIngredients | null;
 	fetchRecipeByID: (id: Drink['idDrink']) => Promise<void>;
+
+	modalIsOpen: boolean;
+	closeModal: () => void;
 };
 
 export const createRecipeSlice: StateCreator<RecipeSliceType> = set => ({
@@ -33,6 +36,14 @@ export const createRecipeSlice: StateCreator<RecipeSliceType> = set => ({
 		const recipe = await getRecipeByID(id);
 		set(() => ({
 			recipe,
+			modalIsOpen: true,
+		}));
+	},
+	modalIsOpen: false,
+	closeModal: () => {
+		set(() => ({
+			recipe: null,
+			modalIsOpen: false,
 		}));
 	},
 });
