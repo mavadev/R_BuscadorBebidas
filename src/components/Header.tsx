@@ -1,50 +1,13 @@
-import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useAppStore } from '../stores/useAppStore';
-import { SearchFilter } from '../types/recipe-types';
+import { FormHeader } from './FormHeader';
 
 export const Header = () => {
-	// Location
 	const { pathname } = useLocation();
 	const hasHome = useMemo(() => pathname == '/', [pathname]);
 
-	// Store
 	const drinks = useAppStore(state => state.drinks);
-	const setNotification = useAppStore(state => state.setNotification);
-
-	const categories = useAppStore(state => state.categories);
-	const fetchCategories = useAppStore(state => state.fetchCategories);
-	useEffect(() => {
-		fetchCategories();
-	}, []);
-
-	// State
-	const [searchFilter, setSearchFilter] = useState<SearchFilter>({
-		ingredient: '',
-		category: '',
-	});
-	const searchDrinks = useAppStore(state => state.searchDrinks);
-
-	const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-		setSearchFilter({
-			...searchFilter,
-			[e.target.name]: e.target.value,
-		});
-	};
-
-	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-
-		// Validar valores
-		if (Object.values(searchFilter).includes('')) {
-			setNotification('Todos los campos son obligatorios', 'error');
-			return;
-		}
-
-		// Consultar las bebidas
-		searchDrinks(searchFilter);
-	};
-
 	const conditionalClass = useMemo(() => {
 		if (hasHome) {
 			var className = 'bg-header bg-cover bg-center bg-blend-color-dodge';
@@ -84,54 +47,8 @@ export const Header = () => {
 						</NavLink>
 					</nav>
 				</div>
-				{/* Formulario */}
-				{hasHome && (
-					<form
-						onSubmit={handleSubmit}
-						className='space-y-5 w-full md:w-1/2 lg:w-1/3 pb-5 animate__animated animate__fadeIn'>
-						<div className='flex-[2]'>
-							<label
-								htmlFor='ingredient'
-								className='block text-white uppercase font-bold text-sm mb-3'>
-								Nombre o Ingredientes:
-							</label>
-							<input
-								type='text'
-								id='ingredient'
-								name='ingredient'
-								onChange={handleChange}
-								placeholder='Ej. Vodka, Tequila, Café'
-								className='p-3 w-full rounded-md outline-none'
-							/>
-						</div>
-						<div className='flex-[2]'>
-							<label
-								htmlFor='category'
-								className='block text-white uppercase font-bold text-sm mb-3'>
-								Categoría:
-							</label>
-							<select
-								id='category'
-								name='category'
-								onChange={handleChange}
-								className='p-3 w-full rounded-md outline-none'>
-								<option value=''>-- Seleccione --</option>
-								{categories.map((category, index) => (
-									<option
-										key={index}
-										value={category.strCategory}>
-										{category.strCategory}
-									</option>
-								))}
-							</select>
-						</div>
-						<input
-							type='submit'
-							value='Buscar Recetas'
-							className='bg-primary hover:bg-primary-darken button rounded-md p-3'
-						/>
-					</form>
-				)}
+				{/* Formulario en Home */}
+				{hasHome && <FormHeader />}
 			</div>
 		</header>
 	);
