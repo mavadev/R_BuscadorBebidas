@@ -9,7 +9,7 @@ export const DrinkCard = ({ drink }: DrinkCardProps) => {
 	const fetchRecipeByID = useAppStore(state => state.fetchRecipeByID);
 
 	return (
-		<div className='w-full'>
+		<div className='w-full animate__animated animate__fadeIn'>
 			<div className='overflow-hidden'>
 				<img
 					loading='lazy'
@@ -18,7 +18,7 @@ export const DrinkCard = ({ drink }: DrinkCardProps) => {
 					className='hover:scale-110 hover:rotate-2 transition-transform'
 				/>
 			</div>
-			<div className='p-2 space-y-3'>
+			<div className='py-2 space-y-3'>
 				<p className='text-lg md:text-sm truncate'>{drink.strDrink}</p>
 				<button
 					className='text-lg md:text-sm bg-black hover:bg-black/90 button p-2'

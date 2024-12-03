@@ -45,8 +45,8 @@ function getIngredients(recipe: FullDrinkIngredients): Array<string> {
 		const ingredient = recipe[`strIngredient${position}` as keyof FullDrinkIngredients];
 		const measure = recipe[`strMeasure${position}` as keyof FullDrinkIngredients];
 
-		if (ingredient && measure) {
-			ingredients.push(`${ingredient} - ${measure}`);
+		if (ingredient) {
+			ingredients.push(measure ? `${ingredient} - ${measure}` : ingredient);
 			position++;
 		} else {
 			existNewIngredient = false;

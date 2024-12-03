@@ -10,6 +10,8 @@ export const Header = () => {
 
 	// Store
 	const drinks = useAppStore(state => state.drinks);
+	const setNotification = useAppStore(state => state.setNotification);
+
 	const categories = useAppStore(state => state.categories);
 	const fetchCategories = useAppStore(state => state.fetchCategories);
 	useEffect(() => {
@@ -35,7 +37,7 @@ export const Header = () => {
 
 		// Validar valores
 		if (Object.values(searchFilter).includes('')) {
-			console.log('Todos los campos son obligatorios');
+			setNotification('Todos los campos son obligatorios', 'error');
 			return;
 		}
 
@@ -72,12 +74,12 @@ export const Header = () => {
 					<nav className='flex gap-2'>
 						<NavLink
 							to='/'
-							className={({ isActive }) => `${isActive ? 'text-white' : 'text-gray-300'} font-bold px-2 text-lg`}>
+							className={({ isActive }) => `${isActive ? 'text-white' : 'text-gray-300'} font-bold px-2 uppercase`}>
 							Inicio
 						</NavLink>
 						<NavLink
 							to='/favoritos'
-							className={({ isActive }) => `${isActive ? 'text-white' : 'text-gray-300'} font-bold px-2 text-lg`}>
+							className={({ isActive }) => `${isActive ? 'text-white' : 'text-gray-300'} font-bold px-2 uppercase`}>
 							Favoritos
 						</NavLink>
 					</nav>
@@ -85,8 +87,8 @@ export const Header = () => {
 				{/* Formulario */}
 				{hasHome && (
 					<form
-						className='space-y-5 w-full md:w-1/2 lg:w-1/3 pb-5'
-						onSubmit={handleSubmit}>
+						onSubmit={handleSubmit}
+						className='space-y-5 w-full md:w-1/2 lg:w-1/3 pb-5 animate__animated animate__fadeIn'>
 						<div className='flex-[2]'>
 							<label
 								htmlFor='ingredient'

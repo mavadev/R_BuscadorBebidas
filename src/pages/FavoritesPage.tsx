@@ -6,25 +6,22 @@ const FavoritesPage = () => {
 	const favorites = useAppStore(state => state.favorites);
 	const hasFavorites = useMemo(() => favorites.length > 0, [favorites]);
 
-	if (!hasFavorites)
-		return (
-			<main className='container mx-auto px-5 py-10'>
-				<h1 className='text-4xl font-bold'>Favoritos</h1>
-				<p className='text-center text-2xl my-10'>Tus bebidas favoritas se mostrarán aquí</p>
-			</main>
-		);
-
 	return (
-		<main className='container mx-auto px-5 py-10'>
-			<h1 className='text-4xl font-bold'>Favoritos</h1>
-			<div className='grid grid-cols-[repeat(auto-fit,_minmax(150px,200px))] gap-5 my-5'>
-				{favorites.map(favorite => (
-					<DrinkCard
-						key={favorite.idDrink}
-						drink={favorite}
-					/>
-				))}
-			</div>
+		<main className='container mx-auto px-5 py-10 text-center'>
+			<h1 className='text-xl text-gray-500 uppercase'>Mi Carta de</h1>
+			<h1 className='text-2xl font-bold uppercase'>Bebidas Favoritas</h1>
+			{hasFavorites ? (
+				<div className='grid grid-cols-[repeat(auto-fit,_minmax(150px,_1fr))] gap-5 my-10'>
+					{favorites.map(favorite => (
+						<DrinkCard
+							key={favorite.idDrink}
+							drink={favorite}
+						/>
+					))}
+				</div>
+			) : (
+				<p className='text-center text-xl mt-10'>¡Aún no eliges tus bebidas favoritas!</p>
+			)}
 		</main>
 	);
 };
